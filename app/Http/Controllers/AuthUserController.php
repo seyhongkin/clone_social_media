@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class AuthUserController extends Controller
 {
@@ -102,6 +103,12 @@ class AuthUserController extends Controller
                 $destinationPath =  public_path('/image');
                 $image->move($destinationPath, $name);
                 $data['image'] = $name;
+
+                //delete old image from current user
+                $oldImage = public_path('/image/') . $user->image;
+                if (file_exists($oldImage)) {
+                    File::delete($oldImage);
+                }
             }
 
             $data['password'] = bcrypt($request->password);
