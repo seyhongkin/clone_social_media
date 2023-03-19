@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
 
 class AuthUserController extends Controller
 {
+    //register
     public function register(Request $request)
     {
         $data = $request->validate([
@@ -44,5 +46,70 @@ class AuthUserController extends Controller
 
         //return json back with status 200
         return response()->json(['user' => $user, 'access_token' => $token], 200);
+    }
+
+    //login user
+    public function login(Request $request)
+    {
+        $data = $request->validate([
+            'email' => 'required|string|email|max:255',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        //if the given credentials is correct
+        if (auth()->attempt(['email' => $request->email, 'password' => $request->password])) {
+            //get user
+            $user = auth()->user();
+
+            //create token for current user
+            $token = $user->createToken('authToken')->accessToken;
+
+            //response back
+            return Response()->json(['message' => 'Login successful', 'user' => $user, 'access_token' => $token]);
+        }
+
+        //if it fail to find the matching crediential
+        return response(['message' => 'Incorrect infomation!']);
+    }
+
+    //logout user
+    public function  logout(Request $request)
+    {
+        $user = auth()->user()->token();
+        $user->revoke();
+        return response(['success' => 'Logout Successful']);
+    }
+
+    //update user
+    public function update(Request $request, $id)
+    {
+        //find user that have the same id
+        $user = User::find($id);
+
+        //if it fount user
+        if ($user) {
+            $data = $request->validate([
+                'name' => 'string',
+                'email' => 'string|email|max:255',
+                'password' => 'string|min:6|confirmed',
+            ]);
+
+            //if the given data has file
+            if ($request->hasFile('image')) {
+                //get file
+                $image = $request->file('image');
+                $name = time() . '.' . $image->getClientOriginalExtension();
+                $destinationPath =  public_path('/image');
+                $image->move($destinationPath, $name);
+                $data['image'] = $name;
+            }
+
+            $data['password'] = bcrypt($request->password);
+            $user->update($data);
+            return response(['message' => 'Update successful', 'user' => $user], 200);
+        }
+
+        //if it fail to find user
+        return response(['message' => 'User not found'], 404);
     }
 }

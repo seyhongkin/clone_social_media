@@ -21,3 +21,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //register route
 Route::post('/user/register', [AuthUserController::class, 'register']);
+
+//login route
+Route::post('user/login', [AuthUserController::class, 'login']);
+
+//logout route
+Route::post('user/logout', [AuthUserController::class, 'logout'])->middleware('auth:api');
+
+//update route
+Route::post('/user/{id}', [AuthUserController::class, 'update'])->middleware('auth:api');
