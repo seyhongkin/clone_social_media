@@ -16,6 +16,9 @@ class EnsureTokenIsValid
      */
     public function handle(Request $request, Closure $next)
     {
+        if ($request->input('token') !== 'laravel') {
+            return redirect('welcome');
+        }
         return $next($request);
     }
 }

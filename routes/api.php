@@ -30,3 +30,8 @@ Route::post('user/logout', [AuthUserController::class, 'logout'])->middleware('a
 
 //update route
 Route::post('/user/{id}', [AuthUserController::class, 'update'])->middleware('auth:api');
+
+//testing route
+Route::get('/user/test', function () {
+    return response(['success' => 'Successful']);
+})->middleware('hasToken');

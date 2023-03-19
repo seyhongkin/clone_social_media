@@ -54,7 +54,7 @@ class AuthUserController extends Controller
     {
         $data = $request->validate([
             'email' => 'required|string|email|max:255',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => 'required|string|min:6',
         ]);
 
         //if the given credentials is correct
@@ -110,8 +110,9 @@ class AuthUserController extends Controller
                     File::delete($oldImage);
                 }
             }
-
-            $data['password'] = bcrypt($request->password);
+            if ($request->has('password')) {
+                $data['password'] = bcrypt($request->password);
+            }
             $user->update($data);
             return response(['message' => 'Update successful', 'user' => $user], 200);
         }
