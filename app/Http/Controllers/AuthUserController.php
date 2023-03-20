@@ -120,4 +120,19 @@ class AuthUserController extends Controller
         //if it fail to find user
         return response(['message' => 'User not found'], 404);
     }
+
+    //get current user
+    public function user()
+    {
+        $user = auth()->user();
+        return response()->json(['user' => $user], 200);
+    }
+
+    //get all users
+    public function all()
+    {
+        $users = User::all();
+        $count = $users->count();
+        return response()->json(['count' => $count, 'users' => $users]);
+    }
 }

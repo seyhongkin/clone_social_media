@@ -35,3 +35,9 @@ Route::post('/user/{id}', [AuthUserController::class, 'update'])->middleware('au
 Route::get('/user/test', function () {
     return response(['success' => 'Successful']);
 })->middleware('hasToken');
+
+//current user route
+Route::get('/user', [AuthUserController::class, 'user'])->middleware('auth:api');
+
+//all users
+Route::get('/user/all', [AuthUserController::class, 'all'])->middleware('auth:api');
