@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthUserController;
+use App\Http\Controllers\LikeController;
+use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -41,3 +43,19 @@ Route::get('/user', [AuthUserController::class, 'user'])->middleware('auth:api')
 
 //all users
 Route::get('/user/all', [AuthUserController::class, 'all'])->middleware('auth:api');
+
+
+//post
+Route::post('/post/upload', [PostController::class, 'post'])->middleware('auth:api');
+
+//get post belong to current user
+Route::get('/post', [PostController::class, 'index'])->middleware('auth:api');
+
+//like route
+Route::post('/post/{id}/like', [LikeController::class, 'like'])->middleware('auth:api');
+
+//unlike route
+Route::post('/post/{id}/unlike', [LikeController::class, 'unlike'])->middleware('auth:api');
+
+//get all likes from post
+Route::get('/post/{id}/like', [LikeController::class, 'getPostLike'])->middleware('auth:api');
