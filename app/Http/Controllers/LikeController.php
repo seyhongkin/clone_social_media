@@ -51,7 +51,7 @@ class LikeController extends Controller
             //get likes by post id
             $likes = Post::with('likes.user')->where('id', $id)->get();
 
-            return response()->json(['likes' => $likes]);
+            return response()->json(['post' => $likes]);
         }
     }
 }

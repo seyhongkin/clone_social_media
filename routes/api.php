@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthUserController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
@@ -59,3 +60,15 @@ Route::post('/post/{id}/unlike', [LikeController::class, 'unlike'])->middleware(
 
 //get all likes from post
 Route::get('/post/{id}/like', [LikeController::class, 'getPostLike'])->middleware('auth:api');
+
+//comment on post
+Route::post('/post/{id}/comment', [CommentController::class, 'comment'])->middleware('auth:api');
+
+//delete comment
+Route::delete('/post/{pid}/{cid}', [CommentController::class, 'removeComment'])->middleware('auth:api');
+
+//update comment
+Route::post('/post/comment/{id}', [CommentController::class, 'update'])->middleware('auth:api');
+
+//get comments on post
+Route::get('/post/{pid}', [CommentController::class, 'getComment'])->middleware('auth:api');
